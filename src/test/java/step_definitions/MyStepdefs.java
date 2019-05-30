@@ -6,10 +6,18 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class MyStepdefs {
@@ -90,15 +98,14 @@ public class MyStepdefs {
 
     @And("user acknowledges rules")
     public void userAcknowledgesRules() {
+
         driver.findElement(By.xpath("//input[@type='checkbox']")).click();
     }
 
     @And("user confirms registration")
     public void userConfirmsRegistration() {
-
-        waitt(3000);
+        waitt(2000);
         driver.findElement(By.id("register-submit-btn")).click();
-
     }
 
 
@@ -123,10 +130,8 @@ public class MyStepdefs {
         driver.findElement (By.id("fos_user_registration_form_company_name")).sendKeys(parameter);
     }
 
-
     @And("user fills NIP")
     public void userFillsNIPNip() {
-
         System.setProperty("webdriver.chrome.driver", "/home/miki/chromedriver_linux64/chromedriver");
         generatorIt = new ChromeDriver();
         generatorIt.manage().window().maximize();
@@ -137,7 +142,86 @@ public class MyStepdefs {
 
         driver.findElement(By.id("fos_user_registration_form_nip")).sendKeys(nip);
 
-        waitt(3000);
+        waitt(2000);
         generatorIt.close();
+    }
+
+    @When("user is on page with - Help in programming issues - caption")
+    public void userIsOnPageWithHelpInProgrammingIssuesCaption() {
+        String actual = driver.findElement(By.className("main-page-top__header")).getText();
+
+        assertEquals("Pomoc w problemach programistycznych", actual);
+    }
+
+    @And("user clicks on - Need Help - button")
+    public void userClicksOnNeedHelpButton() {
+        driver.findElement(By.className("select-text-desktop")).click();
+    }
+
+    @And("user selects subject to be discusses with the Mentor")
+    public void userSelectsSubjectToBeDiscussesWithTheMentor() {
+        driver.findElements(By.xpath("//div[@class='main-page-top__select-container']//ul//li")).get(7).click();
+    }
+
+    @And("user clicks - Find Mentor - button")
+    public void userClicksFindMentorButton() {
+        driver.findElement(By.className("main-page-top__select-btn")).click();
+    }
+
+    @When("user is on the page with a chosen subject")
+    public void userIsOnPageWithAChosenSubject() {
+
+        String filter = driver.findElement(By.xpath("//p[text()='Filtruj: ']")).getText();
+
+        assertTrue(filter.contains("Filtruj: "));
+    }
+
+
+    @And("user reserves Mentor")
+    public void userReservesMentor() {
+
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.xpath("//button[text() = 'Rezerwuj']"), 0));
+
+        driver.findElements(By.xpath("//button[text() = 'Rezerwuj']")).get(0).click();
+    }
+
+    @And("user describes the issue")
+    public void userDescribesTheIssue() {
+
+        WebElement txt = driver.findElement(By.className("reservation__modal-textarea"));
+
+        waitt(3000);
+        txt.sendKeys("I have the following question...");
+    }
+
+    @And("user chooses date of consultation")
+    public void userChoosesDateOfConsultation() {
+        driver.findElements(By.xpath("//div[@id='dateSelect']//ul//li")).get(0).click();
+
+    }
+
+    @And("user chooses time of consultation")
+    public void userChoosesTimeOfConsultation() {
+        driver.findElements(By.xpath("//div[@id='hourSelect']//ul//li")).get(0).click();
+    }
+
+    @And("user acknowledges the order")
+    public void userAcknowledgesTheOrder() {
+        driver.findElement(By.className("reservation-modal__summary-button")).click();
+    }
+
+    @When("user is on payment page")
+    public void userIsOnPaymentPage() {
+
+        waitt(3000);
+        String currentUrl = driver.getCurrentUrl();
+
+        assertTrue(currentUrl.contains("secure.payu.com"));
+    }
+
+    @Then("web browser is automatically closed")
+    public void webBrowserIsAutomaticallyClosed() {
+        driver.close();
     }
 }

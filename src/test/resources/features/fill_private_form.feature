@@ -17,7 +17,7 @@ Feature: Exercise 2
     And user confirms registration
     And user closes browser
     Examples:
-      | email         | firstName | secondName | password | passwordRepeat | city     | zipCode | street   | homeNumber |
-      | ala@gmail.com | Ala       | Makota     | ala123   | ala123         | Warszawa | 01-494  | Bema     | 69         |
-      | ola@gmail.com | ola       | Mapsa      | ola123   | ola123         | Warszawa | 01-494  | Kolorowa | 96         |
-    
+      | email           | firstName | secondName | password | passwordRepeat | city     | zipCode | street   | homeNumber |
+      | ala@gmail.com   | Ala       | Makota     | ala123   | ala123         | Warszawa | 01-494  | Bema     | 69         |
+      | ola@gmail.com   | Ola       | Mapsa      | ola123   | ola123         | Warszawa | 01-494  | Kolorowa | 96         |
+      | anna1@gmail.com | Anna      | Mapsa      | anna123  | anna123        | Warszawa | 01-494  | Kolorowa | 96         |
