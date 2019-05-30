@@ -96,9 +96,6 @@ public class MyStepdefs {
     @And("user confirms registration")
     public void userConfirmsRegistration() {
 
-//        MyClass MyClass = new MyClass();
-//        MyClass.waitt(5000);
-
         waitt(3000);
         driver.findElement(By.id("register-submit-btn")).click();
 
