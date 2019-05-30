@@ -20,4 +20,4 @@ Feature: Exercise 2
       | email         | firstName | secondName | password | passwordRepeat | city     | zipCode | street   | homeNumber |
       | ala@gmail.com | Ala       | Makota     | ala123   | ala123         | Warszawa | 01-494  | Bema     | 69         |
       | ola@gmail.com | ola       | Mapsa      | ola123   | ola123         | Warszawa | 01-494  | Kolorowa | 96         |
-
+    
