@@ -10,7 +10,16 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import javax.imageio.ImageIO;
 
 
 import java.util.ArrayList;
@@ -30,6 +39,21 @@ public class MyStepdefs {
         try {Thread.sleep(timee);}
         catch (InterruptedException ex) {Thread.currentThread().interrupt();}
     }
+
+    void ScreenCapture() throws AWTException, IOException {
+        // capture the whole screen
+        BufferedImage screencapture = new Robot().createScreenCapture(
+                new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()) );
+
+        // Save as JPEG
+        File file = new File("screencapture.jpg");
+        ImageIO.write(screencapture, "jpg", file);
+
+        // Save as PNG
+        // File file = new File("screencapture.png");
+        // ImageIO.write(screencapture, "png", file);
+    }
+
 
     @Given("there is open browser with Coders Guru {string} page")
     public void thereIsOpenBrowserWithCodersGuruPage(String url) {
@@ -104,7 +128,6 @@ public class MyStepdefs {
 
     @And("user confirms registration")
     public void userConfirmsRegistration() {
-        waitt(2000);
         driver.findElement(By.id("register-submit-btn")).click();
     }
 
@@ -224,4 +247,153 @@ public class MyStepdefs {
     public void webBrowserIsAutomaticallyClosed() {
         driver.close();
     }
+
+
+
+
+
+    // *********** ZAD 5 FLIGHT RESERVATION ***********
+
+
+    @Given("there is open browser with {string} page")
+    public void thereIsOpenBrowserWithPage(String url) {
+        System.setProperty("webdriver.chrome.driver", "/home/miki/chromedriver_linux64/chromedriver");
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get(url);
+    }
+
+    @When("user clicks on flights button")
+    public void userClicksOnFlightsButton() {
+        waitt(2000);
+        driver.findElement(By.xpath("//a[@title='Flights']")).click();
+        try {ScreenCapture();}
+        catch(AWTException a) {;}
+        catch(IOException a) {;}
+    }
+
+
+    @And("user selects -Round Trip-")
+    public void userSelectsRoundTrip() {
+        waitt(2000);
+        driver.findElements(By.xpath("//ins")).get(1).click();
+    }
+
+    @And("user enters {string} departure aiport")
+    public void userEntersDepartureAiport(String parameter) {
+        driver.findElement(By.xpath("//*[@id='flights']/form/div[1]")).click();
+        waitt(2000);
+
+        driver.findElement(By.xpath("//*[@id='select2-drop']/div/input")).sendKeys(parameter);
+        waitt(4000);
+
+        driver.findElement(By.xpath("//*[@id='select2-drop']/div/input")).sendKeys("\n");
+
+    }
+
+    @And("user enters {string} destination aiport")
+    public void userEntersDestinationAiport(String parameter) {
+        driver.findElement(By.xpath("//*[@id='flights']/form/div[2]")).click();
+        waitt(2000);
+
+        driver.findElement(By.xpath("//*[@id='select2-drop']/div/input")).sendKeys(parameter);
+        waitt(4000);
+
+        driver.findElement(By.xpath("//*[@id ='select2-drop']/div/input")).sendKeys("\n");
+    }
+
+    @And("users selects departure date")
+    public void usersSelectsDepartureDate() {
+         driver.findElement(By.xpath("//*[@id ='flights']/form/div[3]/div/input")).sendKeys("24012019");
+        }
+
+    @And("user selects return date")
+    public void userSelectsReturnDate() {
+        driver.findElement(By.xpath("//*[@id ='flights']/form/div[4]/div/input")).sendKeys("31012019");
+    }
+
+    @And("user presses -Search- button")
+    public void userPressesSearchButton() {
+        driver.findElement(By.xpath("//*[@id ='flights']/form/div[6]/button")).click();
+    }
+
+
+    @When("user is presented with available flights")
+    public void userIsPresentedWithAvailableFlights() {
+
+        assertEquals("AVAILABLE FLIGHTS", driver.findElements(By.cssSelector(".panel-heading")).get(2).getText());
+    }
+
+    @And("user selects -Book now-")
+    public void userSelectsBookNow() {
+       waitt(10000);
+       driver.findElements(By.cssSelector(".bookbtn")).get(0).click();
+    }
+
+    @When("user is presented with personal data form")
+    public void userIsPresentedWithPersonalDataForm() {
+        String bookNow = driver.findElements(By.cssSelector(".panel-heading")).get(0).getText();
+
+        assertEquals("PERSONAL DETAILS", bookNow);
+
+    }
+
+    @And("user enters first Name (.*)")
+    public void userEntersFirstNameFirstName(String parameter) {
+        driver.findElement(By.name("firstname")).sendKeys(parameter);
+        }
+
+    @And("user enters last Name (.*)")
+    public void userEntersLastNameLastName(String parameter) {
+        driver.findElement(By.name("lastname")).sendKeys(parameter);
+    }
+
+    @And("user enters email (.*)")
+    public void userEntersEmailEmail(String parameter) {
+        driver.findElement(By.name("email")).sendKeys(parameter);
+    }
+
+    @And("user reconfirms email (.*)")
+    public void userReconfirmsEmailEmail(String parameter) {
+        driver.findElement(By.name("confirmemail")).sendKeys(parameter);
+    }
+
+    @And("user enters mobile (.*)")
+    public void userEntersMobileMobile(String parameter) {
+        driver.findElement(By.name("phone")).sendKeys(parameter);
+    }
+
+    @And("user enters address (.*)")
+    public void userEntersAddressAddress(String parameter) {
+        driver.findElement(By.name("address")).sendKeys(parameter);
+    }
+
+    @And("user selects country (.*)")
+    public void userSelectsCountryCountry(String parameter) {
+        Select country = new Select(driver.findElement(By.name("country")));
+        country.selectByVisibleText(parameter);
+    }
+
+    @And("users confirms the booking")
+    public void usersConfirmsTheBooking() {
+        driver.findElement(By.id("cookyGotItBtn")).click();
+        driver.findElement(By.cssSelector("button.btn.btn-success.btn-lg.btn-block.completebook")).click();
+    }
+
+
+    @When("having invoice")
+    public void havingInvoice() {
+        waitt(10000);
+        assertEquals("Invoice", driver.getTitle());
+        waitt(5000);
+    }
+
+    @Then("gets the invoice screenshot")
+    public void getsTheInvoiceScreenshot() {
+        try {ScreenCapture();}
+        catch(AWTException a) {;}
+        catch(IOException a) {;}
+    }
+
+
 }

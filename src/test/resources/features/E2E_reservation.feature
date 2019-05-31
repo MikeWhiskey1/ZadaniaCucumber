@@ -29,7 +29,6 @@ Feature: Exercise 4
     And user describes the issue
     And user chooses date of consultation
     And user chooses time of consultation
-
     And user acknowledges the order
 
     When user is on payment page
